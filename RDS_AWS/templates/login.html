@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Login</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background-color: #f0f0f0;
+    }
+    .container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+    .content {
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1);
+      padding: 24px;
+      width: 300px;
+    }
+    .heading {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 16px;
+    }
+    .paragraph {
+      margin-bottom: 16px;
+    }
+    .form-control {
+      width: 100%;
+      margin-bottom: 16px;
+    }
+    .button {
+      background-color: #007bff;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 16px;
+      cursor: pointer;
+    }
+
+    input[type="text"], input[type="password"] {
+      padding: 8px 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      box-sizing: border-box;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="content">
+      <h3 class="heading">Bem-Vindo</h3>
+      <p class="paragraph">Digite os dados de Login para ter acesso:</p>
+
+      <div>
+        <label for="username">Username:</label>
+        <input type="text" id="username" class="form-control" />
+      </div>
+
+      <div>
+        <label for="password">Password:</label>
+        <input type="password" id="password" class="form-control" />
+      </div>
+
+      <div style="margin-top: 16px;">
+        <button class="button" onclick="handleLogin()">Acessar</button>
+      </div>
+    </div>
+  </div>
+  <div id='streamlit-container'></div>
+
+  <script>
+    function handleLogin() {
+        console.log('handleLogin()');
+        const username = document.getElementById('username').value;
+        const password = document.getElementById('password').value;
+      
+        fetch('/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({ username, password })
+        })
+          .then(response => response.json())
+          .then(data => {
+            if (data.access_token) {
+              localStorage.setItem('access_token', data.access_token);
+              window.alert(`Login realizado com sucesso! ${data.access_token}`);
+            } else {
+              console.log('Erro ao fazer login:', data.error);
+              alert('Erro ao fazer login.');
+            }
+          })
+          .catch(error => {
+            console.error('Erro na requisição:', error);
+            alert('Erro na requisição.');
+          });
+      }      
+</script>
+  
+</body>
+</html>
